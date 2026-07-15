@@ -59,7 +59,7 @@ pip install -r requirements.txt
 
 | File | Used for | Source |
 |---|---|---|
-| GADM checkpoint | **GADM (ours)** — evaluation & inference | <!-- TODO(release): Hugging Face / Google Drive link --> *link coming soon* |
+| `SP_GADM.tar` (91 MB, model-only) | **GADM (ours)** — evaluation & inference | <!-- TODO(release): Hugging Face / Google Drive link --> *link coming soon* |
 | `SP_DiffGlue.tar` | DiffGlue baseline & demo | [DiffGlue release](https://drive.google.com/drive/folders/1YHd7MJaKki7e5wHqepXJLVboGYxmyRf2?usp=sharing) → place in `demo/models/weights/` |
 | `superpoint_v1.pth` | SuperPoint extractor | auto-downloaded from [magicleap/SuperGluePretrainedNetwork](https://github.com/magicleap/SuperGluePretrainedNetwork) *(non-commercial research license)* |
 
@@ -113,14 +113,14 @@ both RANSAC and DLT estimators):
 ```bash
 cd GADM
 python -m scripts.eval.megadepth1500 --conf superpoint+gadm-official \
-    --checkpoint /path/to/gadm_checkpoint.tar
+    --checkpoint /path/to/SP_GADM.tar
 ```
 
 Homography estimation on HPatches:
 
 ```bash
 python -m scripts.eval.hpatches --conf superpoint+gadm-official \
-    --checkpoint /path/to/gadm_checkpoint.tar
+    --checkpoint /path/to/SP_GADM.tar
 ```
 
 The DiffGlue baseline is evaluated the same way with
