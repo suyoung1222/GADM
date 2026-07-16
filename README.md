@@ -59,9 +59,16 @@ pip install -r requirements.txt
 
 | File | Used for | Source |
 |---|---|---|
-| `SP_GADM.tar` (91 MB, model-only) | **GADM (ours)** — evaluation & inference | <!-- TODO(release): Hugging Face / Google Drive link --> *link coming soon* |
+| `SP_GADM.tar` (91 MB, model-only) | **GADM (ours)** — evaluation & inference | [huggingface.co/suyoung1222/GADM](https://huggingface.co/suyoung1222/GADM) |
 | `SP_DiffGlue.tar` | DiffGlue baseline & demo | [DiffGlue release](https://drive.google.com/drive/folders/1YHd7MJaKki7e5wHqepXJLVboGYxmyRf2?usp=sharing) → place in `demo/models/weights/` |
 | `superpoint_v1.pth` | SuperPoint extractor | auto-downloaded from [magicleap/SuperGluePretrainedNetwork](https://github.com/magicleap/SuperGluePretrainedNetwork) *(non-commercial research license)* |
+
+Download the GADM checkpoint with:
+
+```bash
+pip install -U "huggingface_hub[cli]"
+hf download suyoung1222/GADM SP_GADM.tar --local-dir .
+```
 
 ## Data Preparation
 
@@ -93,7 +100,7 @@ python -m scripts.train SP+DiffGlue_homography \
 ```
 
 Stage 2 fine-tunes on MegaDepth with GADM's Sampson epipolar regularization
-(`epi_weight: 1.0`, `matcher_loss_weight: 0.1`):
+(`epi_weight: 0.1`, `matcher_loss_weight: 1.0`):
 
 ```bash
 python -m scripts.train SP+GADM_megadepth \
@@ -125,6 +132,14 @@ python -m scripts.eval.hpatches --conf superpoint+gadm-official \
 
 The DiffGlue baseline is evaluated the same way with
 `--conf superpoint+diffglue-official --checkpoint ../demo/models/weights/SP_DiffGlue.tar`.
+
+Reproduced with this repository and the released `SP_GADM.tar`
+(MegaDepth-1500, pose AUC @5°/10°/20°):
+
+| Model | RANSAC | DLT |
+|---|---|---|
+| DiffGlue (`SP_DiffGlue.tar`) | 49.96 / 67.24 / 80.30 | 43.15 / 58.96 / 73.00 |
+| **GADM (`SP_GADM.tar`)** | **50.97 / 67.91 / 80.78** | **44.63 / 60.62 / 74.49** |
 
 **Occlusion robustness.** To reproduce the occlusion experiments, generate the
 occluded pair lists and images with `GADM/generate_occlusion_data.py` and
